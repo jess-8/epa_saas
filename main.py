@@ -45,7 +45,6 @@ def initiate_form():
     if 'form_data' not in st.session_state:
         st.session_state.form_data = {
             'pfas_path_input': '',
-            'income_path_input': '',
             'chem': '',
             'report_year': '',
             'report_month': '',
@@ -59,13 +58,6 @@ def initiate_form():
             # User pfas dataset path input
             pfas_path_input = st.text_input(
                 "Enter local path to Geotracker PFAS File (CSV format).",
-                label_visibility=st.session_state.visibility,
-                disabled=st.session_state.disabled
-            )
-
-            # User income dataset path input
-            income_path_input = st.text_input(
-                "Enter income dataset file path 👇",
                 label_visibility=st.session_state.visibility,
                 disabled=st.session_state.disabled
             )
@@ -96,7 +88,6 @@ def initiate_form():
             # Make sure all fields filled out
             if submitted:
                 validations = [validate_file_field(pfas_path_input),
-                               validate_income_field(income_path_input), 
                                 validate_chem_field(chem),
                                 validate_month_field(report_month),
                                 validate_year_field(report_year),
@@ -107,13 +98,12 @@ def initiate_form():
                     # Update session state
                     st.session_state.form_data.update({
                         'pfas_path_input': pfas_path_input,
-                        'income_path_input': income_path_input,
                         'chem': chem,
                         'report_year': report_year,
                         'report_month': report_month,
                         'submitted': True
                     })
-                    return pfas_path_input, income_path_input, chem, report_year, report_month
+                    return pfas_path_input,chem, report_year, report_month
 
                 else:
                     # Show all validation errors
@@ -125,12 +115,6 @@ def validate_file_field(pfas_path_input):
     """Validate pfas file field filled out."""
     if not pfas_path_input:
         return False, "Please enter a file path for the PFAS dataset."
-    return True, ""
-
-def validate_income_field(income_path_input):
-    """Validate income file field filled out."""
-    if not income_path_input:
-        return False, "Please enter a file path for the income dataset."
     return True, ""
 
 def validate_chem_field(chem):
@@ -328,7 +312,8 @@ def main():
                                 )
                             )
 
-    pfas_path, income_path, chem, year, month = initiate_form()
+    pfas_path, chem, year, month = initiate_form()
+    income_path = "https://raw.githubusercontent.com/jess-8/epa_saas/refs/heads/main/average_income_by_county.csv"
     date = datetime.date(year, month, day).strftime("%Y-%m-%d") 
     pfas_cols = ["Chemical Abbreviation", "Longitude", "Latitude", "Date", "Public Water System Name", "Site Name", "Value"]
     pfas_df = load_data(pfas_path, False, pfas_cols)
