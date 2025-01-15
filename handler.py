@@ -58,11 +58,7 @@ def initiate_form():
             st.write("Requirements")
             
             # User pfas dataset path input
-            pfas_path_input = st.text_input(
-                "Enter local path to Geotracker PFAS File (CSV format).",
-                label_visibility=st.session_state.visibility,
-                disabled=st.session_state.disabled
-            )
+            pfas_path_input = st.file_uploader("Upload Geotracker PFAS File (CSV format)", type = "csv")
 
             # User chemical input
             chem = st.selectbox(
